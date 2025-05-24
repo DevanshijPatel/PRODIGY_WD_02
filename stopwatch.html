@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch Web App</title>
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #667eea, #764ba2);
+      --text: #ffffff;
+      --box-bg: rgba(0, 0, 0, 0.5);
+      --btn-bg: #ffffff;
+      --btn-color: #764ba2;
+    }
+
+    body.light {
+      --bg: linear-gradient(135deg, #ffecd2, #fcb69f);
+      --text: #333333;
+      --box-bg: rgba(255, 255, 255, 0.7);
+      --btn-bg: #ffffff;
+      --btn-color: #ff5f6d;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .container {
+      background: var(--box-bg);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      animation: popIn 0.8s ease-in-out;
+    }
+
+    .stopwatch {
+      font-size: 4rem;
+      margin: 20px 0;
+      text-shadow: 2px 2px 8px #000;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: var(--btn-bg);
+      color: var(--btn-color);
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #ff5f6d;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .laps {
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    .laps p {
+      margin: 5px 0;
+      color: var(--text);
+    }
+
+    .theme-toggle {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #ab89ef;
+      text-decoration: underline;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>⏱ Stopwatch</h1>
+    <div class="stopwatch" id="display">00:00:00</div>
+    <div class="buttons">
+      <button onclick="start()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+      <button onclick="lap()">Lap</button>
+    </div>
+    <div class="laps" id="laps"></div>
+    <div class="theme-toggle" onclick="toggleTheme()">Toggle Theme 🌗</div>
+  </div>
+
+  <!-- Sound Effects -->
+  <audio id="start-sound" src="start.mp3" preload="auto"></audio>
+  <audio id="stop-sound" src="stop.mp3" preload="auto"></audio>
+
+  <script>
+    let timer;
+    let isRunning = false;
+    let startTime;
+    let elapsedTime = 0;
+
+    const startSound = document.getElementById('start-sound');
+    const stopSound = document.getElementById('stop-sound');
+
+    function updateDisplay(time) {
+      const totalSeconds = Math.floor(time / 1000);
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      const milliseconds = String(time % 1000).padStart(3, '0').substring(0, 2);
+      document.getElementById('display').textContent = `${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    function start() {
+      if (!isRunning) {
+        startSound.play();
+        isRunning = true;
+        startTime = Date.now() - elapsedTime;
+        timer = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          updateDisplay(elapsedTime);
+        }, 10);
+      }
+    }
+
+    function pause() {
+      if (isRunning) {
+        stopSound.play();
+        isRunning = false;
+        clearInterval(timer);
+      }
+    }
+
+    function reset() {
+      clearInterval(timer);
+      isRunning = false;
+      elapsedTime = 0;
+      updateDisplay(elapsedTime);
+      document.getElementById('laps').innerHTML = '';
+    }
+
+    function lap() {
+      if (isRunning) {
+        const lapTime = document.getElementById('display').textContent;
+        const lapEntry = document.createElement('p');
+        lapEntry.textContent = `Lap ${document.getElementById('laps').childElementCount + 1}: ${lapTime}`;
+        document.getElementById('laps').appendChild(lapEntry);
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+    }
+
+    updateDisplay(0);
+  </script>
+</body>
+</html>
