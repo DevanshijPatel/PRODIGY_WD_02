@@ -11,7 +11,7 @@ This is a simple yet functional **Stopwatch Web Application** created using **HT
 - 🕓 Lap time recording
 - 🖥️ Responsive design for all screen sizes
 - 💡 Clean and accessible UI
-- ⚙️ Real-time time tracking with accurate interval measurement<br>
+- ⚙️ Real-time time tracking with accurate interval measurement<br><br>
 🛠️ Technologies Used
 - HTML – Structure of the web app  
 - CSS – Styling and layout  
