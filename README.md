@@ -12,7 +12,7 @@ This is a simple yet functional **Stopwatch Web Application** created using **HT
 - 🖥️ Responsive design for all screen sizes
 - 💡 Clean and accessible UI
 - ⚙️ Real-time time tracking with accurate interval measurement
-<br><br>
+  <br><br>
 🛠️ Technologies Used
 - HTML – Structure of the web app  
 - CSS – Styling and layout  
